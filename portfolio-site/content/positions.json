@@ -1,0 +1,16 @@
+[
+    {
+      "id": "ux-intern",
+      "title": "UX Design Intern",
+      "company": "Hemp Co.",
+      "year": "2024",
+      "hero": "img/ux-intern.png"
+    },
+    {
+      "id": "front-end-dev",
+      "title": "Front‑End Developer",
+      "company": "Redstring Labs",
+      "year": "2025",
+      "hero": "img/front-end.png"
+    }
+  ]

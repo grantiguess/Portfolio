@@ -1,0 +1,75 @@
+/* Palette & typography */
+:root {
+    --bg-dark: #0d0f17;
+    --glass-dark: rgba(255, 255, 255, 0.05);
+    --glass-light: rgba(255, 255, 255, 0.12);
+    --pink: #ff6ec7;
+    --blue: #4cc9f0;
+    --radius: 1.2rem;
+  }
+  
+  html,body {
+    margin: 0;
+    height: 100%;
+    font-family: 'EB Garamond', serif;
+    background: var(--bg-dark);
+    color: #fff;
+    overflow: hidden; /* router controls scroll */
+  }
+  
+  #app {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    place-items: center;
+  }
+  
+  /* Frosted‑glass card */
+  .card {
+    backdrop-filter: blur(12px) saturate(160%);
+    background: var(--glass-dark);
+    border: 1px solid var(--glass-light);
+    border-radius: var(--radius);
+    padding: 2rem 3rem;
+    transition: backdrop-filter .4s ease, transform .4s ease, opacity .4s;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+  }
+  
+  /* Title & body text */
+  h1,h2,h3 {
+    font-family: 'Bebas Neue', cursive;
+    margin: 0 0 .5rem;
+    letter-spacing: .02em;
+  }
+  
+  /* Double‑diamond container */
+  .diamond-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .phase {
+    width: 22vmin;
+    height: 22vmin;
+    position: relative;
+    background: var(--glass-dark);
+    border: 1px solid var(--glass-light);
+    backdrop-filter: blur(10px);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    transition: opacity .4s ease;
+  }
+  .phase.right { clip-path: polygon(0 0, 100% 0, 50% 100%); }
+  
+  /* nav arrows */
+  .arrow-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--blue);
+    cursor: pointer;
+    transition: transform .3s;
+  }
+  .arrow-btn:hover { transform: scale(1.2); }
