@@ -35,18 +35,17 @@ html,body {
 
 /* Frosted‑glass card */
 .card {
-    aspect-ratio: 1 / 1; /* Make card square */
+    /* aspect-ratio: 1 / 1; */ /* Removed square aspect ratio for better mobile flow */
     backdrop-filter: blur(12px) saturate(160%);
-    background: var(--glass-bg);     /* Use translucent dark gray */
-    border: 1px solid var(--glass-border); /* Use slightly more opaque dark gray border */
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius);
-    padding: 2rem 3rem;
+    padding: 1.5rem; /* Adjusted padding slightly */
     transition: backdrop-filter .4s ease, transform .4s ease, opacity .4s;
-    cursor: pointer;
+    /* cursor is set dynamically in JS */
 }
 .card:hover {
     transform: translateY(-6px);
-    /* Optional: add subtle hover effect with accent colors if needed */
 }
 
 /* Title & body text */
@@ -85,3 +84,48 @@ h1,h2,h3 {
     transition: transform .3s;
 }
 .arrow-btn:hover { transform: scale(1.2); }
+
+/* Title Area Styling */
+.title-area-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+    width: 90%; /* Mobile first width */
+    max-width: 600px; /* Max width on mobile */
+    position: relative;
+    text-align: center;
+}
+
+/* Grid Layout Styling */
+.entry-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Mobile default: 1 column */
+    gap: 1.5rem; /* Slightly reduced gap for mobile */
+    padding: 1rem; /* Reduced padding for mobile */
+    width: 90%;    /* Mobile first width */
+    max-width: 600px; /* Max width on mobile */
+}
+
+/* Media Query for larger screens */
+@media (min-width: 600px) {
+    .title-area-container {
+        width: clamp(400px, 70vw, 800px); /* Restore clamped width */
+        max-width: 800px;
+    }
+
+    .entry-grid {
+        grid-template-columns: repeat(2, 1fr); /* Switch to 2 columns */
+        gap: 2rem; /* Restore original gap */
+        padding: 2rem; /* Restore original padding */
+        width: clamp(400px, 70vw, 800px); /* Restore clamped width */
+        max-width: 800px;
+        padding-top: 0; /* Keep padding-top 0 */
+        /* aspect-ratio could be re-applied to cards here if needed */
+    }
+
+    .card {
+       padding: 1rem; /* Reset padding for desktop cards if needed */
+       /* aspect-ratio: 1 / 1; */ /* Optional: Re-add aspect ratio for desktop */
+    }
+}

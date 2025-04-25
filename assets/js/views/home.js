@@ -1,35 +1,34 @@
 // --- Helper to Create Title Area (Now handles back button) ---
 function renderTitleArea(titleText, subtitleText, backCallback) {
   const titleContainer = document.createElement('div');
-  titleContainer.style.display = 'flex';       // Use Flexbox
-  titleContainer.style.alignItems = 'center'; // Align items vertically
-  titleContainer.style.justifyContent = 'center'; // Center content overall
-  titleContainer.style.marginBottom = '2rem';
-  titleContainer.style.width = 'clamp(400px, 70vw, 800px)';
-  titleContainer.style.position = 'relative'; // For absolute positioning of button
+  titleContainer.className = 'title-area-container'; // Added class for CSS styling
+  // Removed inline styles for display, align, justify, margin, width, position
+  // titleContainer.style.display = 'flex';
+  // titleContainer.style.alignItems = 'center';
+  // titleContainer.style.justifyContent = 'center';
+  // titleContainer.style.marginBottom = '2rem';
+  // titleContainer.style.width = 'clamp(400px, 70vw, 800px)';
+  // titleContainer.style.position = 'relative';
 
-  // Back Button (if callback provided)
   if (backCallback) {
     const backButton = document.createElement('button');
     backButton.textContent = '←';
-    backButton.className = 'arrow-btn'; // Keep class for potential base styles
-    // Override/add styles:
-    backButton.style.fontSize = '2.5rem'; // Increased size
-    backButton.style.color = 'inherit'; // Use parent text color
-    backButton.style.userSelect = 'none'; // Make text non-selectable
-    backButton.style.position = 'absolute';
+    backButton.className = 'arrow-btn';
+    backButton.style.fontSize = '2.5rem';
+    backButton.style.color = 'inherit';
+    backButton.style.userSelect = 'none';
+    backButton.style.position = 'absolute'; // Keep absolute positioning for button within flex container
     backButton.style.left = '0';
     backButton.style.padding = '0';
-    backButton.style.background = 'none'; // Ensure no background interferes
-    backButton.style.border = 'none'; // Ensure no border interferes
+    backButton.style.background = 'none';
+    backButton.style.border = 'none';
     backButton.addEventListener('click', backCallback);
     titleContainer.appendChild(backButton);
   }
 
-  // Container for Title and Subtitle (to keep them centered)
   const textWrapper = document.createElement('div');
-  textWrapper.style.flexGrow = '1'; // Allow wrapper to take space
-  textWrapper.style.textAlign = 'center'; // Center text within wrapper
+  textWrapper.style.flexGrow = '1';
+  textWrapper.style.textAlign = 'center'; // Keep text centering
 
   const titleElement = document.createElement('h1');
   titleElement.textContent = titleText;
@@ -44,9 +43,7 @@ function renderTitleArea(titleText, subtitleText, backCallback) {
     subtitleElement.textContent = subtitleText;
     textWrapper.appendChild(subtitleElement);
   }
-
   titleContainer.appendChild(textWrapper);
-
   return titleContainer;
 }
 
@@ -65,7 +62,7 @@ function createEntryCard(entryData, onClickCallback) {
   card.style.justifyContent = 'center';
   card.style.alignItems = 'center';
   card.style.textAlign = 'center';
-  card.style.padding = '1rem';
+  // card.style.padding = '1rem'; // Padding is now handled by CSS
   const subtitle = card.querySelector('.subtitle');
   const description = card.querySelector('.description');
   if (subtitle) subtitle.style.fontSize = '0.9em';
@@ -84,8 +81,7 @@ function createEntryCard(entryData, onClickCallback) {
 
 // --- Modified initHomeView ---
 export async function initHomeView(root) {
-  root.innerHTML = ''; // Clear previous content
-
+  root.innerHTML = '';
   const titleArea = renderTitleArea('Portfolio', 'Grant Eubanks', null);
   root.appendChild(titleArea);
 
@@ -96,13 +92,14 @@ export async function initHomeView(root) {
   const positions = window.positionsData;
 
   const grid = document.createElement('div');
-  grid.className = 'entry-grid';
-  grid.style.display = 'grid';
-  grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-  grid.style.gap = '2rem';
-  grid.style.padding = '2rem';
-  grid.style.width = 'clamp(400px, 70vw, 800px)';
-  grid.style.paddingTop = '0';
+  grid.className = 'entry-grid'; // Use class for styling
+  // Removed inline grid layout styles (display, gridTemplateColumns, gap, padding, width, paddingTop)
+  // grid.style.display = 'grid';
+  // grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
+  // grid.style.gap = '2rem';
+  // grid.style.padding = '2rem';
+  // grid.style.width = 'clamp(400px, 70vw, 800px)';
+  // grid.style.paddingTop = '0';
 
   positions.forEach(pos => {
     const positionClickHandler = (event, positionData) => {
@@ -123,34 +120,31 @@ export async function initHomeView(root) {
     const card = createEntryCard(pos, positionClickHandler);
     grid.appendChild(card);
   });
-
   root.appendChild(grid);
 }
 
 // --- Modified displayProjects ---
 function displayProjects(root, positionData) {
-  root.innerHTML = ''; // Clear previous content
-
+  root.innerHTML = '';
   const goBack = () => {
     initHomeView(root);
   };
-
   const titleArea = renderTitleArea(positionData.title, null, goBack);
   root.appendChild(titleArea);
 
   const projectContainer = document.createElement('div');
-  projectContainer.className = 'entry-grid';
-  projectContainer.style.display = 'grid';
-  projectContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
-  projectContainer.style.gap = '2rem';
-  projectContainer.style.padding = '2rem';
-  projectContainer.style.width = 'clamp(400px, 70vw, 800px)';
-  projectContainer.style.paddingTop = '0';
+  projectContainer.className = 'entry-grid'; // Use class for styling
+  // Removed inline grid layout styles
+  // projectContainer.style.display = 'grid';
+  // projectContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+  // projectContainer.style.gap = '2rem';
+  // projectContainer.style.padding = '2rem';
+  // projectContainer.style.width = 'clamp(400px, 70vw, 800px)';
+  // projectContainer.style.paddingTop = '0';
 
   positionData.projects.forEach(project => {
     const projectCard = createEntryCard(project, null);
     projectContainer.appendChild(projectCard);
   });
-
   root.appendChild(projectContainer);
 }
