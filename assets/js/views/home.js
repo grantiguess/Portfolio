@@ -1,40 +1,39 @@
-// --- Helper to Create Title Area (Now handles back button) ---
+// --- Helper to Create Title Area (Handles back button + centering) ---
 function renderTitleArea(titleText, subtitleText, backCallback) {
   const titleContainer = document.createElement('div');
-  titleContainer.className = 'title-area-container'; // Added class for CSS styling
-  // Removed inline styles for display, align, justify, margin, width, position
-  // titleContainer.style.display = 'flex';
-  // titleContainer.style.alignItems = 'center';
-  // titleContainer.style.justifyContent = 'center';
-  // titleContainer.style.marginBottom = '2rem';
-  // titleContainer.style.width = 'clamp(400px, 70vw, 800px)';
-  // titleContainer.style.position = 'relative';
+  titleContainer.className = 'title-area-container'; // Uses flex, space-between from CSS
 
+  const buttonWidth = '2.5rem'; // Approximate width based on font size
+
+  // Left Element (Button or Placeholder)
+  let leftElement;
   if (backCallback) {
-    const backButton = document.createElement('button');
-    backButton.textContent = '←';
-    backButton.className = 'arrow-btn';
-    backButton.style.fontSize = '2.5rem';
-    backButton.style.color = 'inherit';
-    backButton.style.userSelect = 'none';
-    backButton.style.position = 'absolute'; // Keep absolute positioning for button within flex container
-    backButton.style.left = '1rem'; // Added left margin
-    backButton.style.padding = '0';
-    backButton.style.background = 'none';
-    backButton.style.border = 'none';
-    backButton.style.cursor = 'pointer'; // Ensure cursor indicates clickable
-    backButton.addEventListener('click', backCallback);
-    titleContainer.appendChild(backButton);
+    leftElement = document.createElement('button');
+    leftElement.textContent = '←';
+    leftElement.className = 'arrow-btn';
+    leftElement.style.fontSize = '2.5rem';
+    leftElement.style.color = 'inherit';
+    leftElement.style.userSelect = 'none';
+    leftElement.style.padding = '0';
+    leftElement.style.background = 'none';
+    leftElement.style.border = 'none';
+    leftElement.style.cursor = 'pointer';
+    leftElement.style.width = buttonWidth; // Give it a width for spacing
+    leftElement.style.textAlign = 'left'; // Align arrow left
+    leftElement.addEventListener('click', backCallback);
+  } else {
+    leftElement = document.createElement('div');
+    leftElement.style.width = buttonWidth;
+    leftElement.style.visibility = 'hidden';
   }
+  titleContainer.appendChild(leftElement);
 
+  // Center Element (Text Wrapper)
   const textWrapper = document.createElement('div');
-  textWrapper.style.flexGrow = '1';
-  textWrapper.style.textAlign = 'center'; // Keep text centering
-
+  textWrapper.style.textAlign = 'center'; // Center text inside
   const titleElement = document.createElement('h1');
   titleElement.textContent = titleText;
   textWrapper.appendChild(titleElement);
-
   if (subtitleText) {
     const subtitleElement = document.createElement('h2');
     subtitleElement.style.fontFamily = '"EB Garamond", serif';
@@ -45,6 +44,13 @@ function renderTitleArea(titleText, subtitleText, backCallback) {
     textWrapper.appendChild(subtitleElement);
   }
   titleContainer.appendChild(textWrapper);
+
+  // Right Element (Placeholder)
+  const rightPlaceholder = document.createElement('div');
+  rightPlaceholder.style.width = buttonWidth;
+  rightPlaceholder.style.visibility = 'hidden';
+  titleContainer.appendChild(rightPlaceholder);
+
   return titleContainer;
 }
 
@@ -105,13 +111,12 @@ export async function initHomeView(root) {
     const positionClickHandler = (event, positionData) => {
       if (positionData && positionData.projects && positionData.projects.length > 0) {
         const clickedCard = event.currentTarget;
-        clickedCard.classList.add('animating');
+
         gsap.to(clickedCard, {
           scale: 3,
           opacity: 0,
           duration: 0.2,
           onComplete: () => {
-            clickedCard.classList.remove('animating');
             setTimeout(() => {
               displayProjects(root, positionData);
             }, 200);
