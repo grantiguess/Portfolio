@@ -18,10 +18,11 @@ function renderTitleArea(titleText, subtitleText, backCallback) {
     backButton.style.color = 'inherit';
     backButton.style.userSelect = 'none';
     backButton.style.position = 'absolute'; // Keep absolute positioning for button within flex container
-    backButton.style.left = '0';
+    backButton.style.left = '1rem'; // Added left margin
     backButton.style.padding = '0';
     backButton.style.background = 'none';
     backButton.style.border = 'none';
+    backButton.style.cursor = 'pointer'; // Ensure cursor indicates clickable
     backButton.addEventListener('click', backCallback);
     titleContainer.appendChild(backButton);
   }
@@ -57,19 +58,14 @@ function createEntryCard(entryData, onClickCallback) {
     <p class="subtitle">${entryData.company || ''} · ${entryData.year || ''}</p>
     <p class="description">${entryData.description || ''}</p>
   `;
+
+  // Add back styles for centering content within the card
   card.style.display = 'flex';
   card.style.flexDirection = 'column';
-  card.style.justifyContent = 'center';
-  card.style.alignItems = 'center';
-  card.style.textAlign = 'center';
-  // card.style.padding = '1rem'; // Padding is now handled by CSS
-  const subtitle = card.querySelector('.subtitle');
-  const description = card.querySelector('.description');
-  if (subtitle) subtitle.style.fontSize = '0.9em';
-  if (description) {
-     description.style.fontSize = '0.8em';
-     description.style.marginTop = '0.5rem';
-  }
+  card.style.justifyContent = 'center'; // Vertical centering
+  card.style.alignItems = 'center';    // Horizontal centering
+  card.style.textAlign = 'center';    // Ensure text itself is centered
+
   if (onClickCallback) {
     card.style.cursor = 'pointer';
     card.addEventListener('click', (event) => onClickCallback(event, entryData));
@@ -81,35 +77,41 @@ function createEntryCard(entryData, onClickCallback) {
 
 // --- Modified initHomeView ---
 export async function initHomeView(root) {
-  root.innerHTML = '';
-  const titleArea = renderTitleArea('Portfolio', 'Grant Eubanks', null);
-  root.appendChild(titleArea);
+  root.innerHTML = ''; // Clear #app
 
+  // Create Header
+  const header = document.createElement('header');
+  header.id = 'page-header';
+  const titleArea = renderTitleArea('Portfolio', 'Grant Eubanks', null);
+  header.appendChild(titleArea);
+  root.appendChild(header); // Add header to #app
+
+  // Create Main Content Area
+  const main = document.createElement('main');
+  main.id = 'page-content';
+
+  // Load positions data
   if (!window.positionsData) {
     const res = await fetch('./content/positions.json');
     window.positionsData = await res.json();
   }
   const positions = window.positionsData;
 
+  // Create Grid (to go inside main)
   const grid = document.createElement('div');
-  grid.className = 'entry-grid'; // Use class for styling
-  // Removed inline grid layout styles (display, gridTemplateColumns, gap, padding, width, paddingTop)
-  // grid.style.display = 'grid';
-  // grid.style.gridTemplateColumns = 'repeat(2, 1fr)';
-  // grid.style.gap = '2rem';
-  // grid.style.padding = '2rem';
-  // grid.style.width = 'clamp(400px, 70vw, 800px)';
-  // grid.style.paddingTop = '0';
+  grid.className = 'entry-grid';
 
   positions.forEach(pos => {
     const positionClickHandler = (event, positionData) => {
       if (positionData && positionData.projects && positionData.projects.length > 0) {
         const clickedCard = event.currentTarget;
+        clickedCard.classList.add('animating');
         gsap.to(clickedCard, {
           scale: 3,
           opacity: 0,
           duration: 0.2,
           onComplete: () => {
+            clickedCard.classList.remove('animating');
             setTimeout(() => {
               displayProjects(root, positionData);
             }, 200);
@@ -120,31 +122,38 @@ export async function initHomeView(root) {
     const card = createEntryCard(pos, positionClickHandler);
     grid.appendChild(card);
   });
-  root.appendChild(grid);
+
+  main.appendChild(grid); // Add grid to main
+  root.appendChild(main); // Add main to #app
 }
 
 // --- Modified displayProjects ---
 function displayProjects(root, positionData) {
-  root.innerHTML = '';
+  root.innerHTML = ''; // Clear #app
+
+  // Create Header
+  const header = document.createElement('header');
+  header.id = 'page-header';
   const goBack = () => {
     initHomeView(root);
   };
   const titleArea = renderTitleArea(positionData.title, null, goBack);
-  root.appendChild(titleArea);
+  header.appendChild(titleArea);
+  root.appendChild(header); // Add header to #app
 
+  // Create Main Content Area
+  const main = document.createElement('main');
+  main.id = 'page-content';
+
+  // Create Grid (to go inside main)
   const projectContainer = document.createElement('div');
-  projectContainer.className = 'entry-grid'; // Use class for styling
-  // Removed inline grid layout styles
-  // projectContainer.style.display = 'grid';
-  // projectContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
-  // projectContainer.style.gap = '2rem';
-  // projectContainer.style.padding = '2rem';
-  // projectContainer.style.width = 'clamp(400px, 70vw, 800px)';
-  // projectContainer.style.paddingTop = '0';
+  projectContainer.className = 'entry-grid';
 
   positionData.projects.forEach(project => {
     const projectCard = createEntryCard(project, null);
     projectContainer.appendChild(projectCard);
   });
-  root.appendChild(projectContainer);
+
+  main.appendChild(projectContainer); // Add grid to main
+  root.appendChild(main); // Add main to #app
 }

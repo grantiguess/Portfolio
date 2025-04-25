@@ -27,23 +27,94 @@ html,body {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding-top: 2rem;
+    /* align-items: center; */ /* Centering is handled by header/main width */
+    /* padding-top: 2rem; */ /* Removed padding from app */
     box-sizing: border-box;
-    overflow-y: auto; /* Allow vertical scrolling for the whole app content */
+    overflow-y: auto;
+}
+
+/* New Sticky Header Styles */
+#page-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg-main);
+    width: 100%;
+    display: flex; /* Use flex to center the title area inside */
+    justify-content: center;
+    padding: 1rem 0; /* Vertical padding */
+    box-sizing: border-box;
+}
+
+/* Title Area Styling (lives inside header) */
+.title-area-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* margin-bottom: 1rem; */ /* Margin handled by header/main spacing */
+    /* padding-bottom: 1rem; */ /* Padding handled by header */
+    width: 90%; /* Mobile first width */
+    max-width: 600px; /* Max width on mobile */
+    position: relative;
+    text-align: center;
+    /* Removed sticky/z-index/background/top */
+}
+
+/* New Main Content Area */
+#page-content {
+    width: 100%; /* Take full width */
+    display: flex; /* Use flex to center the grid inside */
+    flex-direction: column; /* Stack grid/other content */
+    align-items: center;
+    padding-top: 1rem; /* Space below header */
+    flex-grow: 1; /* Allow main to take remaining space if needed */
+}
+
+/* Grid Layout Styling (lives inside main) */
+.entry-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1rem;
+    width: 90%;
+    max-width: 600px;
 }
 
 /* Frosted‑glass card */
 .card {
-    aspect-ratio: 1 / 1; /* Apply square aspect ratio always */
+    aspect-ratio: 1 / 1;
     backdrop-filter: blur(12px) saturate(160%);
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius);
-    padding: 1.5rem; /* Base padding */
+    padding: 1rem; /* Adjusted base padding */
     transition: backdrop-filter .4s ease, transform .4s ease, opacity .4s;
-    /* cursor is set dynamically in JS */
+    /* Added mobile size constraint */
+    max-width: 300px; /* Limit size on mobile */
+    margin: 0 auto; /* Center card in mobile column */
+    /* Ensure content doesn't overflow the padding */
+    overflow: hidden;
 }
+
+/* Card Text Styling (Mobile First) */
+.card h2 {
+    font-size: 1.5rem; /* Smaller heading */
+    margin-bottom: 0.25rem;
+}
+.card .subtitle {
+    font-size: 0.8rem;
+}
+.card .description {
+    font-size: 0.75rem;
+    margin-top: 0.4rem;
+}
+
+/* Card Animating State */
+.card.animating {
+    z-index: 11; /* Above sticky header */
+    position: relative; /* Needed for z-index */
+}
+
 .card:hover {
     transform: translateY(-6px);
 }
@@ -78,34 +149,13 @@ h1,h2,h3 {
 .arrow-btn {
     background: none;
     border: none;
-    font-size: 2rem;
-    color: var(--accent-green); /* Use Olive Green for arrows */
+    color: var(--text-dark); /* Match text color */
     cursor: pointer;
     transition: transform .3s;
+    user-select: none;
+    /* Font size set in JS */
 }
 .arrow-btn:hover { transform: scale(1.2); }
-
-/* Title Area Styling */
-.title-area-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 2rem;
-    width: 90%; /* Mobile first width */
-    max-width: 600px; /* Max width on mobile */
-    position: relative;
-    text-align: center;
-}
-
-/* Grid Layout Styling */
-.entry-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* Mobile default: 1 column */
-    gap: 1.5rem; /* Slightly reduced gap for mobile */
-    padding: 1rem; /* Reduced padding for mobile */
-    width: 90%;    /* Mobile first width */
-    max-width: 600px; /* Max width on mobile */
-}
 
 /* Media Query for larger screens */
 @media (min-width: 600px) {
@@ -114,18 +164,33 @@ h1,h2,h3 {
         max-width: 800px;
     }
 
+    #page-content {
+        padding-top: 2rem; /* Increase space below header on desktop */
+    }
+
     .entry-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 2rem;
         padding: 2rem;
         width: clamp(400px, 70vw, 800px);
         max-width: 800px;
-        padding-top: 0;
     }
 
-    /* Card padding adjustment for desktop, aspect-ratio is now global */
     .card {
-       padding: 1rem;
-       /* Removed aspect-ratio from here, now applied globally */
+       padding: 1rem; /* Keep desktop padding */
+       max-width: none; /* Remove mobile max-width */
+       margin: 0; /* Remove mobile margin */
+    }
+
+    /* Optional: Adjust card text size back up for desktop if needed */
+    .card h2 {
+        font-size: 1.8rem; /* Slightly larger heading for desktop */
+    }
+    .card .subtitle {
+        font-size: 0.9em; /* Restore from JS */
+    }
+    .card .description {
+        font-size: 0.8em; /* Restore from JS */
+        margin-top: 0.5rem; /* Restore from JS */
     }
 }
