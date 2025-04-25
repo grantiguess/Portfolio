@@ -7,9 +7,7 @@
     --accent-yellow: #EED690;  /* Pale Yellow */
     --glass-bg: rgba(57, 57, 57, 0.1); /* Dark Gray translucent */
     --glass-border: rgba(57, 57, 57, 0.2); /* Dark Gray more opaque */
-
-    /* Keep radius */
-    --radius: 1.2rem;
+    --radius: 6rem; /* Back to 6rem border radius */
 }
 
 html,body {
