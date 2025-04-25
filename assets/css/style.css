@@ -5,9 +5,12 @@
     --text-dark: #393939;      /* Dark Gray */
     --accent-green: #849561;   /* Olive Green */
     --accent-yellow: #EED690;  /* Pale Yellow */
-    --glass-bg: rgba(57, 57, 57, 0.1); /* Dark Gray translucent */
-    --glass-border: rgba(57, 57, 57, 0.2); /* Dark Gray more opaque */
+    /* Updated glass colors for translucent green */
+    --glass-bg: rgba(132, 149, 97, 0.85); /* 85% opaque green */
+    --glass-border: rgba(132, 149, 97, 0.95); /* 95% opaque green */
     --radius: 6rem; /* Back to 6rem border radius */
+    /* New variable for graph lines */
+    --graph-line-color: rgba(57, 57, 57, 0.08); /* Faint dark gray */
 }
 
 html,body {
@@ -15,8 +18,15 @@ html,body {
     height: 100%;
     font-family: 'EB Garamond', serif;
     font-weight: 600;
-    background: var(--bg-main); /* Use Off-White background */
-    color: var(--text-dark);   /* Use Dark Gray text */
+    /* Set base background color */
+    background-color: var(--bg-main);
+    /* Apply graph paper lines */
+    background-image:
+      linear-gradient(to right, var(--graph-line-color) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--graph-line-color) 1px, transparent 1px);
+    background-size: 25px 25px; /* Adjust size of grid squares */
+
+    color: var(--text-dark);
     overflow: hidden; /* router controls scroll */
 }
 
@@ -36,12 +46,15 @@ html,body {
     position: sticky;
     top: 0;
     z-index: 10;
-    background-color: var(--bg-main);
+    /* Use accent green for header background */
+    background-color: var(--accent-green);
     width: 100%;
-    display: flex; /* Use flex to center the title area inside */
+    display: flex;
     justify-content: center;
-    padding: 1rem 0; /* Vertical padding */
+    padding: 1rem 0;
     box-sizing: border-box;
+    /* Ensure text inside header remains dark */
+    color: var(--text-dark);
 }
 
 /* Title Area Styling (lives inside header) */
@@ -54,6 +67,7 @@ html,body {
     padding-left: 1.5rem; /* Increased mobile horizontal padding */
     padding-right: 1.5rem; /* Increased mobile horizontal padding */
     box-sizing: border-box;
+    /* Color is inherited from #page-header */
 }
 
 /* New Main Content Area */
@@ -80,6 +94,7 @@ html,body {
 .card {
     aspect-ratio: 1 / 1;
     backdrop-filter: blur(12px) saturate(160%);
+    /* These now use the translucent green vars */
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius);
