@@ -1,16 +1,82 @@
 [
-    {
-      "id": "ux-intern",
-      "title": "UX Design Intern",
-      "company": "Hemp Co.",
-      "year": "2024",
-      "hero": "img/ux-intern.png"
-    },
-    {
-      "id": "front-end-dev",
-      "title": "Front‑End Developer",
-      "company": "Redstring Labs",
-      "year": "2025",
-      "hero": "img/front-end.png"
-    }
-  ]
+  {
+    "id": "ncsu-cbl",
+    "title": "Cognitive Behavioral Lab",
+    "company": "NCSU",
+    "year": "YYYY",
+    "description": "Placeholder description for Cognitive Behavioral Lab.",
+    "displayType": "double-diamond",
+    "projects": [
+      { 
+        "id": "hortscraper", 
+        "title": "Hortscraper", 
+        "company": "NCSU-CBL",
+        "year": "YYYY",
+        "description": "Placeholder description for Hortscraper."
+      },
+      { 
+        "id": "biophilia", 
+        "title": "Biophilia Hypothesis",
+        "company": "NCSU-CBL",
+        "year": "YYYY",
+        "description": "Placeholder description for Biophilia Hypothesis."
+       }
+    ]
+  },
+  {
+    "id": "hemp-gen",
+    "title": "Hemp Generation",
+    "company": "Hemp Generation",
+    "year": "YYYY",
+    "description": "Placeholder description for Hemp Generation.",
+    "displayType": "double-diamond",
+    "projects": [
+      { 
+        "id": "store-menus", 
+        "title": "Store Menus",
+        "company": "Hemp Gen",
+        "year": "YYYY",
+        "description": "Placeholder description for Store Menus."
+      },
+      { 
+        "id": "lab-report", 
+        "title": "Lab Report System",
+        "company": "Hemp Gen",
+        "year": "YYYY",
+        "description": "Placeholder description for Lab Report System."
+      },
+      { 
+        "id": "inventory", 
+        "title": "Inventory System",
+        "company": "Hemp Gen",
+        "year": "YYYY",
+        "description": "Placeholder description for Inventory System."
+      }
+    ]
+  },
+  {
+    "id": "ibm-zebulon",
+    "title": "IBM + Zebulon Fire Department",
+    "company": "IBM / Zebulon FD",
+    "year": "YYYY",
+    "description": "Placeholder description for IBM + Zebulon FD.",
+    "displayType": "double-diamond",
+    "projects": [
+      { 
+        "id": "fire-entry", 
+        "title": "Alternative Fire Entry",
+        "company": "IBM/ZFD",
+        "year": "YYYY",
+        "description": "Placeholder description for Alternative Fire Entry."
+      }
+    ]
+  },
+  {
+    "id": "redstring",
+    "title": "Redstring",
+    "company": "Redstring",
+    "year": "YYYY",
+    "description": "Placeholder description for Redstring.",
+    "projects": []
+  }
+]

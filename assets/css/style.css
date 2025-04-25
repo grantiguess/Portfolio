@@ -1,75 +1,87 @@
 /* Palette & typography */
 :root {
-    --bg-dark: #0d0f17;
-    --glass-dark: rgba(255, 255, 255, 0.05);
-    --glass-light: rgba(255, 255, 255, 0.12);
-    --pink: #ff6ec7;
-    --blue: #4cc9f0;
+    /* New Color Palette */
+    --bg-main: #ECEFD8;       /* Off-White */
+    --text-dark: #393939;      /* Dark Gray */
+    --accent-green: #849561;   /* Olive Green */
+    --accent-yellow: #EED690;  /* Pale Yellow */
+    --glass-bg: rgba(57, 57, 57, 0.1); /* Dark Gray translucent */
+    --glass-border: rgba(57, 57, 57, 0.2); /* Dark Gray more opaque */
+
+    /* Keep radius */
     --radius: 1.2rem;
-  }
-  
-  html,body {
+}
+
+html,body {
     margin: 0;
     height: 100%;
     font-family: 'EB Garamond', serif;
-    background: var(--bg-dark);
-    color: #fff;
+    font-weight: 600;
+    background: var(--bg-main); /* Use Off-White background */
+    color: var(--text-dark);   /* Use Dark Gray text */
     overflow: hidden; /* router controls scroll */
-  }
-  
-  #app {
+}
+
+#app {
     height: 100%;
     width: 100%;
-    display: grid;
-    place-items: center;
-  }
-  
-  /* Frosted‑glass card */
-  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+    box-sizing: border-box;
+    overflow-y: auto; /* Allow vertical scrolling for the whole app content */
+}
+
+/* Frosted‑glass card */
+.card {
+    aspect-ratio: 1 / 1; /* Make card square */
     backdrop-filter: blur(12px) saturate(160%);
-    background: var(--glass-dark);
-    border: 1px solid var(--glass-light);
+    background: var(--glass-bg);     /* Use translucent dark gray */
+    border: 1px solid var(--glass-border); /* Use slightly more opaque dark gray border */
     border-radius: var(--radius);
     padding: 2rem 3rem;
     transition: backdrop-filter .4s ease, transform .4s ease, opacity .4s;
     cursor: pointer;
-  }
-  .card:hover {
+}
+.card:hover {
     transform: translateY(-6px);
-  }
-  
-  /* Title & body text */
-  h1,h2,h3 {
-    font-family: 'Bebas Neue', cursive;
+    /* Optional: add subtle hover effect with accent colors if needed */
+}
+
+/* Title & body text */
+h1,h2,h3 {
+    font-family: 'Raleway', sans-serif;
     margin: 0 0 .5rem;
     letter-spacing: .02em;
-  }
-  
-  /* Double‑diamond container */
-  .diamond-wrap {
+    color: var(--text-dark); /* Ensure headings use dark text */
+}
+
+/* Double‑diamond container */
+.diamond-wrap {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-  }
-  .phase {
+}
+.phase {
     width: 22vmin;
     height: 22vmin;
     position: relative;
-    background: var(--glass-dark);
-    border: 1px solid var(--glass-light);
+    background: var(--glass-bg);     /* Use translucent dark gray */
+    border: 1px solid var(--glass-border); /* Use slightly more opaque dark gray border */
     backdrop-filter: blur(10px);
     clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
     transition: opacity .4s ease;
-  }
-  .phase.right { clip-path: polygon(0 0, 100% 0, 50% 100%); }
-  
-  /* nav arrows */
-  .arrow-btn {
+}
+.phase.right { clip-path: polygon(0 0, 100% 0, 50% 100%); }
+
+/* nav arrows */
+.arrow-btn {
     background: none;
     border: none;
     font-size: 2rem;
-    color: var(--blue);
+    color: var(--accent-green); /* Use Olive Green for arrows */
     cursor: pointer;
     transition: transform .3s;
-  }
-  .arrow-btn:hover { transform: scale(1.2); }
+}
+.arrow-btn:hover { transform: scale(1.2); }
