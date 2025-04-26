@@ -46,8 +46,11 @@ html,body {
     position: sticky;
     top: 0;
     z-index: 10;
-    /* Use accent green for header background */
-    background-color: var(--accent-green);
+    /* Use accent green for header background - Replace with glass effect */
+    /* background-color: var(--accent-green); */
+    background: var(--glass-bg); /* Apply glass background */
+    border-bottom: 1px solid var(--glass-border); /* Add subtle border */
+    backdrop-filter: blur(12px) saturate(160%); /* Apply backdrop filter */
     width: 100%;
     display: flex;
     justify-content: center;
@@ -208,4 +211,26 @@ h1,h2,h3 {
         font-size: 0.8em; /* Restore from JS */
         margin-top: 0.5rem; /* Restore from JS */
     }
+}
+
+/* Doodle Background Styles */
+#doodle-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0; /* Try 0 to be above body bg */
+    overflow: hidden; /* Prevent doodles going off-screen causing scroll */
+    pointer-events: none; /* Allow clicks to pass through */
+    /* background-color: rgba(255, 0, 0, 0.2);  Temporary: Removed */
+}
+
+.background-doodle {
+    position: absolute;
+    opacity: 0.90; /* Adjusted opacity to 90% */
+    max-width: 70px; /* Further reduced max size */
+    height: auto;
+    /* Add transform-origin for better scaling/rotation */
+    transform-origin: center center;
 }

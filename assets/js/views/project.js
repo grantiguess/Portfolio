@@ -1,18 +1,27 @@
 import { loadMarkdown } from '../utils/md.js';
+import { addBackgroundDoodles } from '../app.js';
 
 // phases for double‑diamond projects
 const phases = ['intro', 'discover', 'define', 'develop', 'deliver', 'conclusion'];
 
-export async function initProjectView(root, [, slug]) {
+export async function initProjectView(root, [, slug], doodlePositionId) {
   const metaRes = await fetch(`./content/projects/${slug}/meta.json`);
   const meta = await metaRes.json();
 
+  // Clear root before adding new content
+  root.innerHTML = '';
+
   if (meta.type === 'double') {
-    renderDoubleDiamond(root, slug);
+    await renderDoubleDiamond(root, slug);
   } else {
     const html = await loadMarkdown(`./content/projects/${slug}/intro.md`);
     root.innerHTML = html;
   }
+
+  // Call addBackgroundDoodles AFTER rendering project content
+  // For now, project pages default to 'all' doodles (null ID)
+  // We could enhance this later if project meta included position ID
+  addBackgroundDoodles(null);
 }
 
 async function renderDoubleDiamond(root, slug) {
@@ -36,15 +45,21 @@ async function renderDoubleDiamond(root, slug) {
   wrap.append(left, phaseEl, right);
   root.appendChild(wrap);
 
+  // Load the initial phase content
+  await loadPhase(index);
+
   async function loadPhase(i) {
     const html = await loadMarkdown(`./content/projects/${slug}/${phases[i]}.md`);
-    gsap.to(phaseEl, { opacity: 0, duration: 0.2, onComplete: () => {
-      phaseEl.innerHTML = html;
-      gsap.to(phaseEl, { opacity: 1, duration: 0.2 });
-    }});
+    // Using await with GSAP might be tricky, ensure content is set
+    return new Promise(resolve => {
+        gsap.to(phaseEl, { opacity: 0, duration: 0.2, onComplete: () => {
+          phaseEl.innerHTML = html;
+          gsap.to(phaseEl, { opacity: 1, duration: 0.2, onComplete: resolve });
+        }});
+    });
   }
 
-  left.onclick = () => { index = (index + phases.length - 1) % phases.length; loadPhase(index); };
-  right.onclick = () => { index = (index + 1) % phases.length; loadPhase(index); };
-  loadPhase(index);
+  left.onclick = async () => { index = (index + phases.length - 1) % phases.length; await loadPhase(index); };
+  right.onclick = async () => { index = (index + 1) % phases.length; await loadPhase(index); };
+  // Initial load is handled above
 }

@@ -1,3 +1,5 @@
+import { addBackgroundDoodles } from '../app.js'; // Import the function
+
 // --- Helper to Create Title Area (Handles back button + centering) ---
 function renderTitleArea(titleText, subtitleText, backCallback) {
   const titleContainer = document.createElement('div');
@@ -82,7 +84,7 @@ function createEntryCard(entryData, onClickCallback) {
 }
 
 // --- Modified initHomeView ---
-export async function initHomeView(root) {
+export async function initHomeView(root, params, doodlePositionId) {
   root.innerHTML = ''; // Clear #app
 
   // Create Header
@@ -130,6 +132,9 @@ export async function initHomeView(root) {
 
   main.appendChild(grid); // Add grid to main
   root.appendChild(main); // Add main to #app
+
+  // Call addBackgroundDoodles AFTER rendering home content
+  addBackgroundDoodles(doodlePositionId);
 }
 
 // --- Modified displayProjects ---
@@ -140,7 +145,8 @@ function displayProjects(root, positionData) {
   const header = document.createElement('header');
   header.id = 'page-header';
   const goBack = () => {
-    initHomeView(root);
+    // When going back, call initHomeView with null ID
+    initHomeView(root, [], null); // Pass null for doodlePositionId
   };
   const titleArea = renderTitleArea(positionData.title, null, goBack);
   header.appendChild(titleArea);
@@ -161,4 +167,8 @@ function displayProjects(root, positionData) {
 
   main.appendChild(projectContainer); // Add grid to main
   root.appendChild(main); // Add main to #app
+
+  // Call addBackgroundDoodles AFTER rendering project list content
+  // Use the ID from the positionData passed into this function
+  addBackgroundDoodles(positionData.id);
 }
