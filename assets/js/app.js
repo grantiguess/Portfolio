@@ -32,94 +32,127 @@ const positionPrefixMap = {
 export function addBackgroundDoodles(positionId = null) {
   const container = document.getElementById('doodle-background');
   if (!container) return;
-
-  container.innerHTML = ''; // Clear existing doodles
+  container.innerHTML = '';
 
   const positionPrefix = positionId ? positionPrefixMap[positionId] : null;
+  const baseDoodleSize = 70;
+  const intraCellPadding = 30; // Padding for grid placement
+  const randomPlacementAttempts = 15;
+  const rotationBufferMultiplier = 1.8; // Increased buffer to 80%
 
-  const baseDoodleSize = 70; // Base size reference
-  const gridRows = 9; // Using 9x12 grid again
-  const gridCols = 12;
+  // Grid setup for initial placement
+  const gridRows = 10; // Finer grid
+  const gridCols = 12; // Finer grid
   const totalCells = gridRows * gridCols;
-  const intraCellPadding = 40; // Increased padding within cell boundaries
+  const cellWidth = window.innerWidth / gridCols;
+  const cellHeight = window.innerHeight / gridRows;
 
-  // Get unique doodle sources for the current context
+  // Get unique sources and generate instances
   const uniqueDoodlesToUse = positionPrefix
     ? allDoodles.filter(doodle => doodle.startsWith(`assets/img/${positionPrefix}_`))
     : allDoodles;
-
   if (uniqueDoodlesToUse.length === 0) return;
 
-  // --- Determine instances for each unique doodle ---
   let doodleInstances = [];
   uniqueDoodlesToUse.forEach(sourceUrl => {
-    const repeatCount = Math.floor(Math.random() * 3) + 1; // 1, 2, or 3 times
-    for (let i = 0; i < repeatCount; i++) {
-      doodleInstances.push(sourceUrl);
-    }
+    const repeatCount = Math.floor(Math.random() * 3) + 1; // 1-3 repeats
+    for (let i = 0; i < repeatCount; i++) doodleInstances.push(sourceUrl);
   });
-
-  // Shuffle the instances list
+  
+  // Shuffle instances
   for (let i = doodleInstances.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [doodleInstances[i], doodleInstances[j]] = [doodleInstances[j], doodleInstances[i]];
   }
 
-  // Limit instances to the number of available cells
-  const instancesToPlaceCount = Math.min(doodleInstances.length, totalCells);
-  const instancesToPlace = doodleInstances.slice(0, instancesToPlaceCount);
+  // --- Placement --- 
+  const placedDoodleBoxes = []; // Store boxes of ALL placed doodles
 
-  // --- Grid Placement Logic --- 
-
-  // Calculate cell dimensions
-  const cellWidth = window.innerWidth / gridCols;
-  const cellHeight = window.innerHeight / gridRows;
-
-  // Create list of all cell indices
+  // 1. Initial Grid Placement (Place up to N doodles in unique cells)
+  const initialGridCount = Math.min(doodleInstances.length, totalCells, 12); // Place max 12 initially via grid
   let availableCellIndices = Array.from({length: totalCells}, (_, k) => k);
-
-  // Shuffle cell indices
   for (let i = availableCellIndices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [availableCellIndices[i], availableCellIndices[j]] = [availableCellIndices[j], availableCellIndices[i]];
   }
+  const cellsToUseIndices = availableCellIndices.slice(0, initialGridCount);
 
-  // Select unique cells for each instance
-  const cellsToUseIndices = availableCellIndices.slice(0, instancesToPlaceCount);
-
-  // Place one doodle instance per selected unique cell
-  cellsToUseIndices.forEach((cellIndex, instanceIndex) => {
-    const doodleSrc = instancesToPlace[instanceIndex];
-    if (!doodleSrc) return;
-
-    // Calculate cell row and column from index
+  for (let i = 0; i < initialGridCount; i++) {
+    const doodleSrc = doodleInstances[i];
+    const cellIndex = cellsToUseIndices[i];
     const cellRow = Math.floor(cellIndex / gridCols);
     const cellCol = cellIndex % gridCols;
+    const placedBox = placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, cellHeight, baseDoodleSize, intraCellPadding, rotationBufferMultiplier);
+    if (placedBox) placedDoodleBoxes.push(placedBox);
+  }
 
-    // Place the doodle within this specific cell
-    placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, cellHeight, baseDoodleSize, intraCellPadding);
+  // 2. Random Placement for Remaining Doodles (with overlap check)
+  const remainingInstances = doodleInstances.slice(initialGridCount);
+
+  remainingInstances.forEach(doodleSrc => {
+    let placed = false;
+    for (let attempt = 0; attempt < randomPlacementAttempts && !placed; attempt++) {
+      // Generate random position, rotation, scale
+      const scale = 0.6 + Math.random() * 0.4;
+      const effectiveSize = baseDoodleSize * scale * rotationBufferMultiplier;
+      const rotation = Math.random() * 60 - 30;
+
+      // Ensure position stays within viewport bounds roughly
+      const randTop = Math.random() * (window.innerHeight - effectiveSize);
+      const randLeft = Math.random() * (window.innerWidth - effectiveSize);
+
+      const potentialBox = {
+        top: randTop,
+        left: randLeft,
+        bottom: randTop + effectiveSize,
+        right: randLeft + effectiveSize
+      };
+
+      // Check for overlap with ALL previously placed boxes
+      let overlap = false;
+      for (const existingBox of placedDoodleBoxes) {
+        if (potentialBox.left < existingBox.right &&
+            potentialBox.right > existingBox.left &&
+            potentialBox.top < existingBox.bottom &&
+            potentialBox.bottom > existingBox.top) {
+          overlap = true;
+          break;
+        }
+      }
+
+      // If no overlap, place it and store its box
+      if (!overlap) {
+        const img = document.createElement('img');
+        img.src = doodleSrc;
+        img.classList.add('background-doodle');
+        img.style.top = `${randTop}px`;
+        img.style.left = `${randLeft}px`;
+        img.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+        container.appendChild(img);
+        placedDoodleBoxes.push(potentialBox);
+        placed = true;
+      }
+    }
+    // If not placed after attempts, it's skipped
   });
 }
 
-// Helper function to place a single doodle within a specific CELL
-function placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, cellHeight, baseDoodleSize, padding) {
+// Helper function to place a single doodle within a specific CELL and return its bounding box
+function placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, cellHeight, baseDoodleSize, padding, rotationBufferMultiplier) {
   const img = document.createElement('img');
   img.src = doodleSrc;
   img.classList.add('background-doodle');
 
   const rotation = Math.random() * 60 - 30;
   const scale = 0.6 + Math.random() * 0.4;
-  const effectiveSize = baseDoodleSize * scale * 1.2; // Include rotation buffer
+  const effectiveSize = baseDoodleSize * scale * rotationBufferMultiplier;
 
-  // Calculate cell boundaries
   const cellTop = cellRow * cellHeight;
   const cellLeft = cellCol * cellWidth;
 
-  // Calculate available space within the cell, using the increased padding
   const availableHeight = Math.max(0, cellHeight - effectiveSize - 2 * padding);
   const availableWidth = Math.max(0, cellWidth - effectiveSize - 2 * padding);
 
-  // Calculate final position with padding and random offset within available space
   const finalTop = cellTop + padding + Math.random() * availableHeight;
   const finalLeft = cellLeft + padding + Math.random() * availableWidth;
 
@@ -128,6 +161,14 @@ function placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, ce
   img.style.transform = `rotate(${rotation}deg) scale(${scale})`;
 
   container.appendChild(img);
+
+  // Return the calculated bounding box for overlap checking
+  return {
+    top: finalTop,
+    left: finalLeft,
+    bottom: finalTop + effectiveSize, // Use effectiveSize which includes buffer
+    right: finalLeft + effectiveSize
+  };
 }
 
 const routes = {
