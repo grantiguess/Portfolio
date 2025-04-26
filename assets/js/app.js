@@ -36,13 +36,14 @@ export function addBackgroundDoodles(positionId = null) {
 
   const positionPrefix = positionId ? positionPrefixMap[positionId] : null;
   const baseDoodleSize = 70;
-  const intraCellPadding = 30; // Padding for grid placement
+  const intraCellPadding = 40; 
   const randomPlacementAttempts = 15;
-  const rotationBufferMultiplier = 1.8; // Increased buffer to 80%
+  const rotationBufferMultiplier = 1.8; // Buffer for overlap checks & grid placement
+  const randomPlacementBufferMultiplier = 2.2; // Larger buffer for random bounds check
 
   // Grid setup for initial placement
-  const gridRows = 10; // Finer grid
-  const gridCols = 12; // Finer grid
+  const gridRows = 10; 
+  const gridCols = 12; 
   const totalCells = gridRows * gridCols;
   const cellWidth = window.innerWidth / gridCols;
   const cellHeight = window.innerHeight / gridRows;
@@ -55,7 +56,10 @@ export function addBackgroundDoodles(positionId = null) {
 
   let doodleInstances = [];
   uniqueDoodlesToUse.forEach(sourceUrl => {
-    const repeatCount = Math.floor(Math.random() * 3) + 1; // 1-3 repeats
+    // Adjust repeat count based on page type
+    const minRepeats = positionId ? 3 : 1; // Min 3 for position pages, 1 for home
+    const maxRepeats = positionId ? 5 : 3; // Max 5 for position, max 3 for home
+    const repeatCount = minRepeats + Math.floor(Math.random() * (maxRepeats - minRepeats + 1));
     for (let i = 0; i < repeatCount; i++) doodleInstances.push(sourceUrl);
   });
   
@@ -92,20 +96,22 @@ export function addBackgroundDoodles(positionId = null) {
   remainingInstances.forEach(doodleSrc => {
     let placed = false;
     for (let attempt = 0; attempt < randomPlacementAttempts && !placed; attempt++) {
-      // Generate random position, rotation, scale
       const scale = 0.6 + Math.random() * 0.4;
-      const effectiveSize = baseDoodleSize * scale * rotationBufferMultiplier;
+      // Use the specific, larger buffer for calculating random placement bounds
+      const randomEffectiveSize = baseDoodleSize * scale * randomPlacementBufferMultiplier;
       const rotation = Math.random() * 60 - 30;
 
-      // Ensure position stays within viewport bounds roughly
-      const randTop = Math.random() * (window.innerHeight - effectiveSize);
-      const randLeft = Math.random() * (window.innerWidth - effectiveSize);
+      // Calculate bounds using the larger buffer
+      const randTop = Math.random() * (window.innerHeight - randomEffectiveSize);
+      const randLeft = Math.random() * (window.innerWidth - randomEffectiveSize);
 
+      // Use the standard buffer for the actual bounding box check
+      const standardEffectiveSize = baseDoodleSize * scale * rotationBufferMultiplier;
       const potentialBox = {
         top: randTop,
         left: randLeft,
-        bottom: randTop + effectiveSize,
-        right: randLeft + effectiveSize
+        bottom: randTop + standardEffectiveSize,
+        right: randLeft + standardEffectiveSize
       };
 
       // Check for overlap with ALL previously placed boxes
@@ -125,9 +131,11 @@ export function addBackgroundDoodles(positionId = null) {
         const img = document.createElement('img');
         img.src = doodleSrc;
         img.classList.add('background-doodle');
+        // Apply random flip here as well
+        const flip = Math.random() < 0.5 ? 'scaleX(-1)' : '';
         img.style.top = `${randTop}px`;
         img.style.left = `${randLeft}px`;
-        img.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+        img.style.transform = `rotate(${rotation}deg) scale(${scale}) ${flip}`.trim();
         container.appendChild(img);
         placedDoodleBoxes.push(potentialBox);
         placed = true;
@@ -137,7 +145,7 @@ export function addBackgroundDoodles(positionId = null) {
   });
 }
 
-// Helper function to place a single doodle within a specific CELL and return its bounding box
+// Helper function to place a single doodle within a specific CELL
 function placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, cellHeight, baseDoodleSize, padding, rotationBufferMultiplier) {
   const img = document.createElement('img');
   img.src = doodleSrc;
@@ -145,6 +153,7 @@ function placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, ce
 
   const rotation = Math.random() * 60 - 30;
   const scale = 0.6 + Math.random() * 0.4;
+  const flip = Math.random() < 0.5 ? 'scaleX(-1)' : ''; // 50% chance to flip
   const effectiveSize = baseDoodleSize * scale * rotationBufferMultiplier;
 
   const cellTop = cellRow * cellHeight;
@@ -158,7 +167,8 @@ function placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, ce
 
   img.style.top = `${finalTop}px`;
   img.style.left = `${finalLeft}px`;
-  img.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+  // Combine rotate, scale, and potentially flip
+  img.style.transform = `rotate(${rotation}deg) scale(${scale}) ${flip}`.trim(); 
 
   container.appendChild(img);
 

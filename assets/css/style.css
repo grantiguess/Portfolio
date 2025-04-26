@@ -1,13 +1,13 @@
 /* Palette & typography */
 :root {
     /* New Color Palette */
-    --bg-main: #ECEFD8;       /* Off-White */
+    --bg-main: #EED690;       /* Off-White */
     --text-dark: #393939;      /* Dark Gray */
     --accent-green: #849561;   /* Olive Green */
     --accent-yellow: #EED690;  /* Pale Yellow */
     /* Updated glass colors for translucent green */
-    --glass-bg: rgba(132, 149, 97, 0.85); /* 85% opaque green */
-    --glass-border: rgba(132, 149, 97, 0.95); /* 95% opaque green */
+    --glass-bg: rgba(132, 149, 97, 0.877); /* 85% opaque green */
+    --glass-border: rgba(132, 149, 97, 0.974); /* 95% opaque green */
     --radius: 6rem; /* Back to 6rem border radius */
     /* New variable for graph lines */
     --graph-line-color: rgba(57, 57, 57, 0.08); /* Faint dark gray */
