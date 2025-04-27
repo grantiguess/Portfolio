@@ -70,7 +70,8 @@ function createEntryCard(entryData, onClickCallback) {
   card.innerHTML = `
     <span class="entry-type-indicator ${typeIndicatorClass}">${typeIndicatorText}</span>
     <h2>${entryData.title || ''}</h2>
-    <p class="subtitle">${entryData.company || ''} · ${entryData.year || ''}</p>
+    <p class="subtitle company">${entryData.company || ''}</p> 
+    <p class="subtitle year">${entryData.year || ''}</p>
     <p class="description">${entryData.description || ''}</p>
   `;
 
@@ -185,6 +186,21 @@ function animateExistingContentOut(wrapperSelector, contentSelector, onCompleteC
     }
 }
 
+// --- NEW Helper Function to Adjust Page Content Padding ---
+function adjustContentPadding() {
+    const header = document.getElementById('page-header');
+    const content = document.getElementById('page-content');
+
+    if (header && content) {
+        // Use requestAnimationFrame to ensure styles are calculated
+        requestAnimationFrame(() => {
+            const headerHeight = header.offsetHeight;
+            const buffer = 24; // Add 24px buffer space
+            content.style.paddingTop = `${headerHeight + buffer}px`;
+        });
+    }
+}
+
 // --- Modified initHomeView ---
 export async function initHomeView(root, params, doodlePositionId) {
   root.innerHTML = ''; // Clear #app
@@ -192,7 +208,7 @@ export async function initHomeView(root, params, doodlePositionId) {
   // Create Header
   const header = document.createElement('header');
   header.id = 'page-header';
-  const titleArea = renderTitleArea('Portfolio', 'Grant Eubanks', null);
+  const titleArea = renderTitleArea('Grant Eubanks', 'UX Design, Software Development, Supply Chain', null);
   header.appendChild(titleArea);
   root.appendChild(header); // Add header to #app
 
@@ -298,6 +314,9 @@ export async function initHomeView(root, params, doodlePositionId) {
 
   root.appendChild(main); // Add main to #app
 
+  // Adjust padding AFTER header and main content are in the DOM
+  adjustContentPadding();
+
   // --- Animate BOTH sections entering ---
   animateNewContent('.grid-section-wrapper', '.entry-grid'); 
   animateNewContent('.about-section-wrapper', '.portfolio-section-panel');
@@ -351,6 +370,9 @@ function displayProjects(root, positionData) {
   animationWrapper.appendChild(projectContainer);
   main.appendChild(animationWrapper); 
   root.appendChild(main); // Add main to #app
+
+  // Adjust padding AFTER header and main content are in the DOM
+  adjustContentPadding();
 
   // --- Animate the wrapper (fade) and project grid (transform) entering ---
   // Use a generic selector for the wrapper if no class was added,
@@ -428,6 +450,9 @@ function displayProjectDetail(root, projectData, positionData) {
   animationWrapper.appendChild(portfolioSection);
   main.appendChild(animationWrapper);
   root.appendChild(main);
+
+  // Adjust padding AFTER header and main content are in the DOM
+  adjustContentPadding();
 
   // --- Animate the wrapper (fade) and detail panel (transform) entering ---
   // Use a generic selector for the wrapper if no class was added

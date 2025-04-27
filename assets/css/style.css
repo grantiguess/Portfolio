@@ -85,9 +85,7 @@ html,body {
     flex-direction: column;
     align-items: center;
     flex-grow: 1;
-    /* ADD PADDING TOP to account for fixed header height */
-    /* Estimate header height (padding + line height) - adjust as needed */
-    padding-top: 5rem; /* Adjust this value based on actual header height */
+    /* Padding will be set dynamically by JS */
 }
 
 /* Grid Layout Styling (lives inside main) */
@@ -160,10 +158,33 @@ html,body {
 }
 .card .subtitle {
     font-size: 0.8rem;
+    /* Add max-width and auto margins for faux side spacing */
+    max-width: 90%; 
+    margin-left: auto;
+    margin-right: auto;
 }
+
+/* Style for the company line */
+.card .subtitle.company {
+    margin-bottom: 0; /* Remove space below company */
+}
+
+/* Style for the year line */
+.card .subtitle.year {
+    margin-top: 0.1rem; /* Add small space above year */
+    margin-bottom: 0.4rem; /* Restore space below year before description */
+    font-family: 'Raleway', sans-serif; /* Match title font */
+}
+
 .card .description {
-    font-size: 0.75rem;
-    margin-top: 0.4rem;
+    font-size: 0.9em; /* Slightly larger font size */
+    line-height: 1.6; /* Match bio text line height */
+    margin-top: 0.8rem; /* Increased space above description */
+    margin-bottom: 0.5rem; /* Add small space below */
+    /* Add max-width and auto margins for faux side spacing */
+    max-width: 80%; /* Reduced width for more horizontal margin */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Removed Card Animating State */
@@ -226,8 +247,7 @@ h1,h2,h3 {
     }
 
     #page-content {
-        /* Adjust padding top for desktop if header height changes */
-        padding-top: 6rem; /* Adjust this value */
+        /* Padding will be set dynamically by JS */
     }
 
     .entry-grid {
@@ -253,8 +273,12 @@ h1,h2,h3 {
         font-size: 0.9em; /* Restore from JS */
     }
     .card .description {
-        font-size: 0.8em; /* Restore from JS */
-        margin-top: 0.5rem; /* Restore from JS */
+        font-size: 0.9em; /* Keep consistent size */
+        line-height: 1.6; /* Keep consistent */
+        margin-top: 1rem; /* Increased desktop margin */
+        margin-bottom: 0.7rem; /* Slightly more space below on desktop */
+        max-width: 80%; /* Keep consistent max-width */
+        /* Keep auto margins */
     }
 }
 
@@ -329,21 +353,24 @@ h1,h2,h3 {
 /* .bio-image-column { display: none; } */
 /* .bio-text-column { display: none; } */
 
-/* Bio Image Styles (Back to float) */
+/* Bio Image Styles (Mobile First) */
 .bio-image {
-    float: left;
-    width: 130px;
+    /* Remove float for mobile */
+    /* float: left; */ 
+    display: block; /* Ensure it takes full width if needed */
+    width: 100%; /* Make full width on mobile */
+    /* Remove fixed width and max-width */
+    /* width: 180px; */
+    /* max-width: 50%; */
     height: auto;
     border-radius: 1.5rem;
-    margin-right: 1.5rem; /* Keep right margin */
-    margin-bottom: 0.5em; /* Add back small bottom margin */
+    margin: 0 auto 1.5rem auto; /* Center horizontally, add bottom margin */
     object-fit: cover;
-    display: block;
 }
 
-/* NEW: Wrapper for the first paragraph */
+/* NEW: Wrapper for the first paragraph - remove BFC */
 .bio-first-paragraph-wrapper {
-    overflow: hidden; /* Apply BFC trigger here */
+    /* overflow: hidden; */ /* No longer needed without float */
 }
 
 /* Apply increased line height to the paragraph inside the wrapper */
@@ -387,12 +414,18 @@ h1,h2,h3 {
         margin-bottom: 2rem;
     }
 
-    /* Adjust Image size and margins */
+    /* Adjust Image size and margins FOR DESKTOP - Re-add float */
     .bio-image {
-        width: 170px;
+        float: left; /* Add float back */
+        width: 210px; /* Larger Desktop width */
+        max-width: none; /* Remove mobile max-width */
         border-radius: 2rem;
-        margin-right: 2rem;
-        /* margin-top: 1.2em; */ /* Remove */
+        margin: 0 2.5rem 0.5em 0; /* Increase right margin, keep others */
+    }
+
+    /* Re-add BFC trigger for desktop */
+    .bio-first-paragraph-wrapper {
+        overflow: hidden; 
     }
 
     /* Adjust rest text margin */

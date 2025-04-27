@@ -2,9 +2,9 @@
   {
     "id": "ncsu-cbl",
     "title": "Cognitive Behavioral Lab",
-    "company": "NCSU",
-    "year": "YYYY",
-    "description": "Placeholder description for Cognitive Behavioral Lab.",
+    "company": "Research Intern",
+    "year": "August 2023 - May 2024",
+    "description": "Aiding the research of Dr. Melinda Knuth and best-seller Vanessa Woods at the fascinating NC State Lab studying the interactions between people and plants.",
     "displayType": "double-diamond",
     "projects": [
       { 
@@ -26,9 +26,9 @@
   {
     "id": "hemp-gen",
     "title": "Hemp Generation",
-    "company": "Hemp Generation",
-    "year": "YYYY",
-    "description": "Placeholder description for Hemp Generation.",
+    "company": "User Experience and Supply Chain Lead",
+    "year": "May 2024 - Present",
+    "description": "Engineering infrastructure for the growing boutique retailer meets industrious wholesaler and white-label manufacturer.",
     "displayType": "double-diamond",
     "projects": [
       { 
@@ -57,9 +57,9 @@
   {
     "id": "ibm-zebulon",
     "title": "IBM + Zebulon Fire Department",
-    "company": "IBM / Zebulon FD",
-    "year": "YYYY",
-    "description": "Placeholder description for IBM + Zebulon FD.",
+    "company": "Student Researcher and Presenter",
+    "year": "January 2024 - May 2024",
+    "description": "Designing it Foward with a senior IBM team as a service project for the Town of Zebulon, North Carolina.",
     "displayType": "double-diamond",
     "projects": [
       { 
@@ -74,9 +74,9 @@
   {
     "id": "redstring",
     "title": "Redstring",
-    "company": "Redstring",
-    "year": "YYYY",
-    "description": "Placeholder description for Redstring.",
+    "company": "Creator, Designer, Developer",
+    "year": "September 2022 - Present",
+    "description": "A cerebral Semantic Web-App. Built in React, open core. My personal passion project.",
     "projects": []
   }
 ]
