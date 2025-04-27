@@ -27,7 +27,8 @@ html,body {
     background-size: 25px 25px; /* Adjust size of grid squares */
 
     color: var(--text-dark);
-    overflow: hidden; /* router controls scroll */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    max-width: 100%; /* Prevent content from forcing wider width */
 }
 
 #app {
@@ -39,19 +40,23 @@ html,body {
     /* padding-top: 2rem; */ /* Removed padding from app */
     box-sizing: border-box;
     overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scroll within app */
 }
 
 /* New Sticky Header Styles */
 #page-header {
-    position: sticky;
+    /* position: sticky; */ /* Change to fixed */
+    position: fixed;
     top: 0;
+    left: 0; /* Ensure it spans full width */
+    width: 100%; /* Ensure it spans full width */
     z-index: 10;
     /* Use accent green for header background - Replace with glass effect */
     /* background-color: var(--accent-green); */
     background: var(--glass-bg); /* Apply glass background */
     border-bottom: 1px solid var(--glass-border); /* Add subtle border */
     backdrop-filter: blur(12px) saturate(160%); /* Apply backdrop filter */
-    width: 100%;
+    /* width: 100%; */ /* Already set above */
     display: flex;
     justify-content: center;
     padding: 1rem 0;
@@ -79,8 +84,10 @@ html,body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* padding-top: 1rem; */ /* Removed top padding */
     flex-grow: 1;
+    /* ADD PADDING TOP to account for fixed header height */
+    /* Estimate header height (padding + line height) - adjust as needed */
+    padding-top: 5rem; /* Adjust this value based on actual header height */
 }
 
 /* Grid Layout Styling (lives inside main) */
@@ -97,17 +104,54 @@ html,body {
 .card {
     aspect-ratio: 1 / 1;
     backdrop-filter: blur(12px) saturate(160%);
-    /* These now use the translucent green vars */
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius);
     padding: 1rem;
     transition: backdrop-filter .4s ease, transform .4s ease, opacity .4s;
-    width: 100%; /* Explicitly fill container width */
-    max-width: 300px; /* Limit size on mobile */
-    margin: 0 auto; /* Center card in mobile column if max-width applies */
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
     overflow: hidden;
+    position: relative; /* Can be removed if not needed elsewhere */
+    /* Ensure centering is still applied */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
+
+/* NEW: Entry Type Indicator */
+.entry-type-indicator {
+    /* position: absolute; */ /* REMOVE */
+    /* top: 0.75rem; */ /* REMOVE */
+    /* right: 0.75rem; */ /* REMOVE */
+    display: block; /* Make it a block for centering and margins */
+    background-color: rgba(57, 57, 57, 0.15);
+    color: var(--text-dark);
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: -0.3rem; /* Nudge slightly higher */
+    margin-bottom: 0.5rem; /* Space below indicator, above title */
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Subtle difference for Position indicator */
+.indicator-position {
+    border: 1px solid rgba(57, 57, 57, 0.25); /* Faint border */
+    /* Adjust padding slightly to account for border */
+    padding: calc(0.2rem - 1px) calc(0.4rem - 1px);
+}
+
+/* No extra style needed for .indicator-project */
 
 /* Card Text Styling (Mobile First) */
 .card h2 {
@@ -182,7 +226,8 @@ h1,h2,h3 {
     }
 
     #page-content {
-        /* padding-top: 2rem; */ /* Removed top padding override */
+        /* Adjust padding top for desktop if header height changes */
+        padding-top: 6rem; /* Adjust this value */
     }
 
     .entry-grid {
@@ -233,4 +278,219 @@ h1,h2,h3 {
     height: auto;
     /* Add transform-origin for better scaling/rotation */
     transform-origin: center center;
+}
+
+/* Portfolio Section Styles */
+/* Remove Portfolio Divider Styles */
+/* .portfolio-divider {
+    border: none;
+    height: 1px;
+    background-color: var(--text-dark);
+    width: 90%;
+    max-width: 600px;
+    margin: 2rem auto;
+} */
+
+.portfolio-section-panel {
+    /* Base styles - keep existing margin (0 auto 2rem auto) */
+    backdrop-filter: blur(12px) saturate(160%);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 1rem; /* Padding for the outer panel */
+    width: 90%; /* Match grid width on mobile */
+    max-width: 600px; /* Match grid max-width on mobile */
+    margin: 2rem auto 2rem auto; /* ADD BACK top margin here, was relying on divider */
+    box-sizing: border-box;
+}
+
+.portfolio-document {
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: calc(var(--radius) - 1rem);
+    padding: 2rem;
+    min-height: 300px;
+}
+
+.portfolio-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Remove old bio layout styles */
+/* .bio-container, .bio-image-column, .bio-text-column, .bio-rest-text { display: none; } */
+
+/* NEW: Container for intro (image + first p) */
+.bio-intro-container {
+    /* overflow: auto; */ /* Removed clearfix */
+    margin-bottom: 1.5rem; /* Space below this section */
+}
+
+/* Remove column styles */
+/* .bio-image-column { display: none; } */
+/* .bio-text-column { display: none; } */
+
+/* Bio Image Styles (Back to float) */
+.bio-image {
+    float: left;
+    width: 130px;
+    height: auto;
+    border-radius: 1.5rem;
+    margin-right: 1.5rem; /* Keep right margin */
+    margin-bottom: 0.5em; /* Add back small bottom margin */
+    object-fit: cover;
+    display: block;
+}
+
+/* NEW: Wrapper for the first paragraph */
+.bio-first-paragraph-wrapper {
+    overflow: hidden; /* Apply BFC trigger here */
+}
+
+/* Apply increased line height to the paragraph inside the wrapper */
+.bio-first-paragraph-wrapper .bio-text-paragraph {
+    line-height: 1.8;
+}
+
+/* General Bio Text Paragraph Styles (for rest-text) */
+.bio-text-paragraph {
+    margin-bottom: 1em;
+    line-height: 1.6;
+    text-align: left;
+}
+
+/* Container for paragraphs 2 onwards */
+.bio-rest-text {
+    /* Add top margin */
+    margin-top: 1.5rem;
+}
+
+.bio-text-paragraph:last-child {
+    margin-bottom: 0;
+}
+
+/* Adjust Portfolio Section for larger screens */
+@media (min-width: 600px) {
+    .portfolio-document {
+        padding: 3rem;
+        border-radius: calc(var(--radius) - 1.5rem);
+    }
+
+    .portfolio-title {
+        margin-bottom: 2rem;
+    }
+
+    /* Remove old bio layout styles for desktop */
+    /* .bio-container, .bio-image-column, .bio-text-column, .bio-rest-text { display: none; } */
+
+    /* Adjust intro container margin */
+    .bio-intro-container {
+        margin-bottom: 2rem;
+    }
+
+    /* Adjust Image size and margins */
+    .bio-image {
+        width: 170px;
+        border-radius: 2rem;
+        margin-right: 2rem;
+        /* margin-top: 1.2em; */ /* Remove */
+    }
+
+    /* Adjust rest text margin */
+    .bio-rest-text {
+      margin-top: 2rem;
+    }
+
+    .portfolio-section-panel {
+        width: clamp(400px, 70vw, 800px);
+        max-width: 800px;
+        padding: 1.5rem;
+        margin: 3rem auto 3rem auto; /* ADD BACK top margin, ADJUST bottom margin */
+    }
+
+    /* REMOVE Specific top margin for project detail panel (desktop) */
+    /* .project-detail-panel {
+        margin-top: 3rem;
+    } */
+}
+
+/* REMOVE Specific top margin for project detail panel (mobile) */
+/* .project-detail-panel {
+    margin-top: 2rem;
+} */
+
+/* Updated Animation Keyframes */
+@keyframes fadeOutOtherCards {
+  from { opacity: 1; }
+  to { opacity: 0; transform: scale(0.95); } /* Slight scale down during fade */
+}
+
+/* Keyframe for opacity fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Keyframe for transform entrance */
+@keyframes enterTransform {
+  from {
+    transform: scale(1.08) translateY(-20px); /* Start larger, slightly higher */
+  }
+  to {
+    transform: scale(1) translateY(0); /* End at normal size and position */
+  }
+}
+
+/* Keyframe for opacity fade-out */
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Keyframe for transform exit */
+@keyframes exitTransform {
+  from {
+    transform: scale(1) translateY(0); /* Start at normal size and position */
+  }
+  to {
+    transform: scale(1.08) translateY(-20px); /* End larger, slightly higher */
+    /* Or perhaps scale down: transform: scale(0.95) translateY(10px); */
+  }
+}
+
+
+/* Updated Animation Classes */
+.card-fading-out {
+  animation: fadeOutOtherCards 0.1s ease-out forwards; /* Super fast */
+  pointer-events: none;
+}
+
+.content-fading-in {
+  animation: fadeIn 0.1s ease-out forwards; /* Super fast */
+  opacity: 0;
+}
+
+.content-transforming-in {
+  animation: enterTransform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* Super fast */
+}
+
+.content-fading-out {
+  animation: fadeOut 0.1s ease-in forwards; /* Super fast */
+  pointer-events: none;
+}
+
+.content-transforming-out {
+  animation: exitTransform 0.1s ease-in forwards; /* Super fast */
+  pointer-events: none;
+}
+
+/* Doodle Animation Classes */
+.doodle-fading-in {
+    animation: fadeIn 0.1s ease-out forwards; /* Super fast */
+    opacity: 0; /* Start hidden */
+}
+
+.doodle-fading-out {
+    animation: fadeOut 0.1s ease-in forwards; /* Super fast */
+    /* Starts visible */
+    pointer-events: none;
 }

@@ -136,6 +136,15 @@ export function addBackgroundDoodles(positionId = null) {
         img.style.top = `${randTop}px`;
         img.style.left = `${randLeft}px`;
         img.style.transform = `rotate(${rotation}deg) scale(${scale}) ${flip}`.trim();
+        
+        // --- Add Fade-in --- 
+        img.classList.add('doodle-fading-in');
+        img.addEventListener('animationend', () => {
+            img.classList.remove('doodle-fading-in');
+            img.style.opacity = ''; // Ensure opacity is reset if needed
+        }, { once: true });
+        // --- End Fade-in ---
+
         container.appendChild(img);
         placedDoodleBoxes.push(potentialBox);
         placed = true;
@@ -169,6 +178,14 @@ function placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, ce
   img.style.left = `${finalLeft}px`;
   // Combine rotate, scale, and potentially flip
   img.style.transform = `rotate(${rotation}deg) scale(${scale}) ${flip}`.trim(); 
+
+  // --- Add Fade-in --- 
+  img.classList.add('doodle-fading-in');
+  img.addEventListener('animationend', () => {
+      img.classList.remove('doodle-fading-in');
+      img.style.opacity = ''; // Ensure opacity is reset if needed
+  }, { once: true });
+  // --- End Fade-in ---
 
   container.appendChild(img);
 
