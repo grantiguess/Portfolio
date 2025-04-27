@@ -119,10 +119,10 @@ function triggerCardTransition(clickedCard, gridSelector, animationCallback) {
   gsap.to(clickedCard, {
     scale: 3,
     opacity: 0,
-    duration: 0.1, // Super fast GSAP
+    duration: 0.3, // Slower zoom/fade for clicked card
     onComplete: () => {
-      // Delay even less than the fastest CSS animation (0.1s = 100ms)
-      setTimeout(animationCallback, 70); // Super fast delay
+      // Delay still based on the *other* fast animations (0.1s = 100ms)
+      setTimeout(animationCallback, 70); // Keep fast delay for view switch
     }
   });
 }
@@ -261,6 +261,12 @@ export async function initHomeView(root, params, doodlePositionId) {
   bioImage.src = 'assets/img/bio_image.jpeg';
   bioImage.alt = 'Grant Eubanks';
   bioImage.className = 'bio-image';
+
+  // --- Add click listener for Bio Image Preview ---
+  bioImage.style.cursor = 'pointer'; // Indicate it's clickable
+  bioImage.addEventListener('click', () => showBioImagePreview(bioImage.src));
+  // --- End Preview Listener ---
+
   imageColumn.appendChild(bioImage);
   bioTopContainer.appendChild(imageColumn);
   const textColumn = document.createElement('div');
@@ -430,4 +436,62 @@ function displayProjectDetail(root, projectData, positionData) {
   // --- Background Doodles ---
   // Use the parent position's ID for doodles
   addBackgroundDoodles(positionData.id);
+}
+
+// --- NEW Function to show Bio Image Preview ---
+function showBioImagePreview(imageUrl) {
+    // Check if overlay already exists
+    if (document.getElementById('bio-image-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'bio-image-overlay';
+
+    const previewImage = document.createElement('img');
+    previewImage.src = imageUrl;
+    previewImage.className = 'bio-image-preview';
+    previewImage.alt = 'Grant Eubanks - Enlarged';
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'bio-image-close-btn';
+    closeButton.innerHTML = '&times;'; // Use HTML entity for 'X'
+    closeButton.setAttribute('aria-label', 'Close image preview');
+
+    // Add elements to overlay
+    overlay.appendChild(previewImage);
+    overlay.appendChild(closeButton);
+
+    // Add dismiss listeners
+    closeButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent overlay click from firing too
+        removeBioImagePreview();
+    });
+
+    overlay.addEventListener('click', (e) => {
+        // Only close if the click is directly on the overlay background
+        if (e.target === overlay) {
+            removeBioImagePreview();
+        }
+    });
+
+    // Lock background scroll
+    document.body.style.overflow = 'hidden';
+
+    // Add overlay to DOM (triggers fade-in animation)
+    document.body.appendChild(overlay);
+}
+
+// --- NEW Function to remove Bio Image Preview ---
+function removeBioImagePreview() {
+    const overlay = document.getElementById('bio-image-overlay');
+    if (!overlay) return;
+
+    // Add fade-out class
+    overlay.classList.add('overlay-fading-out');
+
+    // Remove after animation (duration is 0.2s in CSS)
+    setTimeout(() => {
+        overlay.remove();
+        // Unlock background scroll
+        document.body.style.overflow = '';
+    }, 200); // Match the overlay fade-out duration
 }

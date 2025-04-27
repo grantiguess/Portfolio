@@ -140,8 +140,9 @@ export function addBackgroundDoodles(positionId = null) {
         // --- Add Fade-in --- 
         img.classList.add('doodle-fading-in');
         img.addEventListener('animationend', () => {
+            // Explicitly set final opacity before removing class
+            img.style.opacity = '0.6';
             img.classList.remove('doodle-fading-in');
-            img.style.opacity = ''; // Ensure opacity is reset if needed
         }, { once: true });
         // --- End Fade-in ---
 
@@ -182,8 +183,9 @@ function placeDoodleInCell(container, doodleSrc, cellRow, cellCol, cellWidth, ce
   // --- Add Fade-in --- 
   img.classList.add('doodle-fading-in');
   img.addEventListener('animationend', () => {
+      // Explicitly set final opacity before removing class
+      img.style.opacity = '0.6';
       img.classList.remove('doodle-fading-in');
-      img.style.opacity = ''; // Ensure opacity is reset if needed
   }, { once: true });
   // --- End Fade-in ---
 

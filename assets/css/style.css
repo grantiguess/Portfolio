@@ -273,7 +273,7 @@ h1,h2,h3 {
 
 .background-doodle {
     position: absolute;
-    opacity: 0.90; /* Adjusted opacity to 90% */
+    opacity: 0.6; /* Make doodles more translucent (was 0.9) */
     max-width: 70px; /* Further reduced max size */
     height: auto;
     /* Add transform-origin for better scaling/rotation */
@@ -457,6 +457,17 @@ h1,h2,h3 {
   }
 }
 
+/* Keyframe for doodle fade-in to target opacity */
+@keyframes fadeInDoodle {
+  from { opacity: 0; }
+  to { opacity: 0.6; } /* Target doodle base opacity */
+}
+
+/* Keyframe for doodle fade-out from target opacity */
+@keyframes fadeOutDoodle {
+  from { opacity: 0.6; } /* Start from doodle base opacity */
+  to { opacity: 0; }
+}
 
 /* Updated Animation Classes */
 .card-fading-out {
@@ -485,12 +496,100 @@ h1,h2,h3 {
 
 /* Doodle Animation Classes */
 .doodle-fading-in {
-    animation: fadeIn 0.1s ease-out forwards; /* Super fast */
+    animation: fadeInDoodle 0.2s ease-out forwards; /* Slower doodle fade */
     opacity: 0; /* Start hidden */
 }
 
 .doodle-fading-out {
-    animation: fadeOut 0.1s ease-in forwards; /* Super fast */
+    animation: fadeOutDoodle 0.2s ease-in forwards; /* Slower doodle fade */
     /* Starts visible */
     pointer-events: none;
+}
+
+/* Bio Image Preview Styles */
+#bio-image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(57, 57, 57, 0.7); /* Semi-transparent dark gray */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* High z-index */
+    cursor: pointer; /* Indicate clicking dismisses */
+    opacity: 0;
+    animation: fadeIn 0.2s ease-out forwards; /* Slightly slower fade for overlay */
+}
+
+#bio-image-overlay.overlay-fading-out {
+    animation: fadeOut 0.2s ease-in forwards;
+}
+
+/* No specific container styles needed if using flex on overlay */
+
+.bio-image-preview {
+    display: block;
+    max-width: 85vw;
+    max-height: 85vh;
+    object-fit: contain; /* Maintain aspect ratio */
+    border-radius: 3%; /* Proportional rounding */
+    cursor: default; /* Default cursor over image */
+    transform: scale(0.95);
+    opacity: 0;
+    animation: fadeInScaleUp 0.25s 0.05s ease-out forwards; /* Scale up slightly delayed */
+}
+
+#bio-image-overlay.overlay-fading-out .bio-image-preview {
+    /* Optional: Add scale down on exit */
+    animation: fadeOutScaleDown 0.2s ease-in forwards; 
+}
+
+.bio-image-close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--text-dark);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    padding: 0;
+    transition: background-color 0.2s;
+}
+
+.bio-image-close-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+/* Keyframes for image scale */
+@keyframes fadeInScaleUp {
+    from { 
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeOutScaleDown {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
 }
