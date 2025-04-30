@@ -78,6 +78,11 @@ html,body {
     /* Color is inherited from #page-header */
 }
 
+.title-area-container h1 {
+  /* Add rule to prevent forced lowercase */
+  text-transform: none;
+}
+
 /* New Main Content Area */
 #page-content {
     width: 100%;
@@ -305,15 +310,14 @@ h1,h2,h3 {
 }
 
 /* Portfolio Section Styles */
-/* Remove Portfolio Divider Styles */
-/* .portfolio-divider {
+.portfolio-divider {
     border: none;
     height: 1px;
     background-color: var(--text-dark);
     width: 90%;
     max-width: 600px;
     margin: 2rem auto;
-} */
+}
 
 .portfolio-section-panel {
     /* Base styles - keep existing margin (0 auto 2rem auto) */
@@ -329,15 +333,29 @@ h1,h2,h3 {
 }
 
 .portfolio-document {
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(233, 217, 184, 0.469);
     border-radius: calc(var(--radius) - 1rem);
     padding: 2rem;
     min-height: 300px;
 }
 
+/* NEW: Inner document style for projects */
+.project-document {
+    background-color: rgba(233, 217, 184, 0.469);
+    border-radius: calc(var(--radius) - 1rem);
+    padding: 2rem;
+    /* min-height: 300px; /* Apply only if needed, maybe to DD doc? */
+}
+
+/* Keep project-main-description selector for potential specific overrides, but remove base styles */
+.project-main-description {
+    /* Base styles moved to .project-document */
+}
+
 .portfolio-title {
     text-align: center;
     margin-bottom: 1.5rem;
+    font-size: 1.8rem; /* Explicitly set font size */
 }
 
 /* Remove old bio layout styles */
@@ -397,7 +415,9 @@ h1,h2,h3 {
 
 /* Adjust Portfolio Section for larger screens */
 @media (min-width: 600px) {
-    .portfolio-document {
+    .portfolio-document,
+    .project-document /* Apply desktop adjustments here too */
+    {
         padding: 3rem;
         border-radius: calc(var(--radius) - 1.5rem);
     }
@@ -626,3 +646,168 @@ h1,h2,h3 {
         transform: scale(0.95);
     }
 }
+
+/* --- Double Diamond Section Styles --- */
+.dd-section {
+  /* Base document styles moved to .project-document (applied via .dd-document) */
+  /* Keep margin-top added via JS style */
+  /* The outer .portfolio-section-panel class handles the glass effect */
+  padding-bottom: 1rem; /* Example, adjust as needed */
+}
+
+.dd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  width: 100%;
+  /* border: 1px solid red; */ /* Remove diagnostic border */
+}
+
+/* Override default h2 margins within header */
+.dd-header .dd-title {
+  margin: 0 1rem; /* Keep horizontal margin */
+}
+
+.dd-title {
+  text-align: center;
+  flex-grow: 1;
+  /* margin: 0 1rem; */ /* Moved to specific rule above */
+  text-transform: none;
+  /* border: 1px solid blue; */ /* Remove diagnostic border */
+}
+
+/* Override default button display/padding/margin within header */
+.dd-header .dd-arrow {
+  display: inline-flex; /* Ensure flex behavior */
+  align-items: center; 
+  justify-content: center; 
+  padding: 0.2rem 0.5rem; 
+  margin: 0; /* Remove default button margins */
+  border: none; /* Remove diagnostic border */
+}
+
+.dd-arrow {
+  /* display: inline-flex; */ /* Moved to specific rule above */
+  /* align-items: center; */ /* Moved */
+  /* justify-content: center; */ /* Moved */
+  width: auto;
+  background: none;
+  /* border: 1px solid green; */ /* Remove diagnostic border */
+  /* padding: 0.2rem 0.5rem; */ /* Moved */
+  cursor: pointer;
+  color: var(--text-dark);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.dd-arrow svg {
+  stroke: currentColor; 
+  stroke-width: 2.5; 
+  width: 50px; /* Increase size further */
+  height: 50px; /* Increase size further */
+  display: block; 
+}
+
+.dd-body {
+  /* Layout for image and text, adjust as needed */
+}
+
+/* NEW: Container for image/dots/phase description */
+.dd-meta-container {
+  text-align: center;
+  margin-bottom: 1.5rem; /* Space below meta, above phase content */
+}
+
+.dd-image {
+  display: block; /* Ensure it behaves like a block */
+  max-width: 100%; /* Prevent exceeding container */
+  height: auto; /* Maintain aspect ratio */
+  margin: 1rem auto 0.5rem; /* Center and add space */
+  /* Remove absolute positioning from base class */
+  border-radius: 8px; /* Optional: add slight rounding */
+}
+
+/* NEW: Wrapper for image crossfade */
+.dd-image-wrapper {
+    position: relative; /* Crucial for positioning children */
+    width: 100%; /* Take up container width */
+    max-width: 240px; /* RESTORE previous max-width */
+    margin: 1rem auto 0.5rem; /* Match .dd-image spacing */
+    min-height: 180px; /* ADD minimum height to reserve space */
+    user-select: none; /* Prevent selection */
+    -webkit-user-drag: none; /* Prevent dragging in WebKit */
+    /* pointer-events: none; Apply to images inside */
+}
+
+/* NEW: Styles for overlapping images */
+.dd-image-current,
+.dd-image-next,
+.dd-image-overlay /* Apply positioning to overlay too */
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto; /* Allow natural height */
+    border-radius: inherit; 
+    user-select: none; /* Prevent selection */
+    -webkit-user-drag: none; /* Prevent dragging in WebKit */
+    pointer-events: none; /* Make images unclickable/undraggable */
+}
+
+/* NEW: Style for the overlay */
+.dd-image-overlay {
+    opacity: 0.15; /* Adjust for desired faintness */
+    z-index: 1; /* Ensure it's above current/next images */
+    /* pointer-events: none;  Already set above */
+}
+
+.dd-dots-container {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.dd-dot {
+    font-size: 2rem; /* Adjust size as needed */
+    line-height: 1;
+    cursor: default; /* No interaction expected */
+    color: var(--text-dark); /* Use text color as base */
+    opacity: 0.3; /* Make inactive dots faded */
+    /* ADD Transition */
+    transition: opacity 0.3s ease-in-out; /* Make dot transition faster */
+}
+
+.dd-dot.active-dot {
+    opacity: 1; /* Make active dot fully opaque */
+    color: var(--text-dark); /* Keep text color */
+}
+
+/* NEW: Phase description style */
+.dd-phase-description {
+  font-family: 'Raleway', sans-serif; /* Use sans-serif font */
+  font-size: 0.9rem;
+  font-weight: 400; /* Lighter weight */
+  text-align: center;
+  max-width: 80%; /* Limit width */
+  margin: 0 auto; /* Center block */
+  color: var(--text-dark); 
+  opacity: 0.9; /* Slightly less emphasis than main text */
+}
+
+/* NEW: Divider style */
+.dd-divider {
+  border: none; /* Remove default HR border */
+  height: 1px; /* Set height */
+  background-color: var(--text-dark); /* Use text color */
+  opacity: 0.2; /* Make it subtle */
+  width: 80%; /* Match description width */
+  margin: 1.5rem auto; /* Spacing above and below, centered */
+}
+
+.dd-content {
+  /* Styles for the specific phase markdown content area */
+}
+/* --- End Double Diamond Styles --- */

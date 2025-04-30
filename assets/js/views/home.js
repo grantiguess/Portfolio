@@ -1,5 +1,8 @@
 import { addBackgroundDoodles } from '../app.js'; // Import the function
 
+// --- Helper Exports ---
+export { renderTitleArea, createEntryCard, triggerCardTransition, animateNewContent, animateExistingContentOut, adjustContentPadding, showBioImagePreview, removeBioImagePreview };
+
 // --- Helper to Create Title Area (Handles back button + centering) ---
 function renderTitleArea(titleText, subtitleText, backCallback) {
   const titleContainer = document.createElement('div');
@@ -358,8 +361,15 @@ function displayProjects(root, positionData) {
   positionData.projects.forEach(project => {
     const projectClickHandler = (event, projectData) => {
       const clickedCard = event.currentTarget;
+      // Ensure projectData has an ID for the slug
+      if (!projectData.id) {
+          console.error("Project data is missing an 'id' field for routing:", projectData);
+          return; 
+      }
+      // Instead of calling displayProjectDetail, change the hash to trigger the main router
       triggerCardTransition(clickedCard, '.entry-grid', () => {
-          displayProjectDetail(root, projectData, positionData);
+          console.log(`Navigating via hash to: #/project/${projectData.id}`); // Log navigation
+          location.hash = `#/project/${projectData.id}`;
       });
     };
     const projectCard = createEntryCard(project, projectClickHandler);

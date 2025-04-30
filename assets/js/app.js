@@ -207,28 +207,57 @@ const routes = {
 };
 
 function router() {
-  const [hash, ...params] = location.hash.split('/');
+  // console.log('router: Function called. Hash:', location.hash); // REMOVED
+  
+  // --- Improved Hash Parsing ---
+  let hash = location.hash;
+  let params = [];
+  const parts = location.hash.split('/');
+  if (parts.length > 1 && parts[0].startsWith('#')) {
+      hash = parts[0] + '/' + parts[1]; // e.g., #/project
+      params = parts.slice(2);         // e.g., [biophilia-hypothesis]
+  } else {
+      // Handle simple hashes like # or #/position (no further params)
+      hash = location.hash;
+      params = [];
+  }
+  // Ensure empty hash maps to root route key ''
+  if (hash === '#') hash = ''; 
+  // console.log('router: Parsed hash:', hash, 'Params:', params); // REMOVED
+
   const root = document.getElementById('app');
+  if (!root) { console.error('Root element #app not found!'); return; }
+  // console.log('router: Clearing root element.'); // REMOVED
   root.innerHTML = ''; // clear existing page content
 
   // Determine position ID for doodles
   let doodlePositionId = null;
   if (hash === '#/position' && params.length > 0 && positionPrefixMap[params[0]]) {
-    doodlePositionId = params[0];
-  } else if (hash === '') { // Explicitly handle home page
-      doodlePositionId = null; // Use 'all' doodles
+    doodlePositionId = params[0]; 
+  } else if (hash === '') { 
+      doodlePositionId = null; 
   }
-  // Add specific logic for #/project if needed, otherwise defaults to all (null)
-  // Currently, project view will implicitly get doodlePositionId = null
+  // console.log('router: Determined doodlePositionId:', doodlePositionId); // REMOVED
 
-  // Call the appropriate view initializer, passing the doodle ID
-  (routes[hash] || initHomeView)(root, params, doodlePositionId);
-
-  // // Update doodles *after* view is initialized <-- REMOVED, now handled by view
-  // addBackgroundDoodles(doodlePositionId);
+  // Call the appropriate view initializer
+  const routeTarget = routes[hash];
+  // console.log(`router: Looked up routes['${hash}']:`, routeTarget); // REMOVED
+  const viewFunction = routeTarget || initHomeView;
+  // console.log(`router: Selected viewFunction: ${viewFunction.name}`); // REMOVED
+  
+  try {
+    // console.log(`router: Attempting to call ${viewFunction.name}...`); // REMOVED
+    viewFunction(root, params, doodlePositionId);
+    // console.log(`router: Successfully called ${viewFunction.name}.`); // REMOVED
+  } catch (error) {
+    console.error(`router: Error calling ${viewFunction.name}:`, error);
+    root.innerHTML = `<p style="color:red;">Error during view initialization: ${error.message}</p>`;
+  }
 }
 
-// Initial load: Call router which handles both view init and doodle init
-window.addEventListener('load', router);
-// Hash change: Call router again
-window.addEventListener('hashchange', router);
+// Standard setup:
+// Listen for hash changes AFTER initial load
+window.addEventListener('hashchange', router); 
+
+// Execute router once immediately for initial load
+router();
